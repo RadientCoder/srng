@@ -4,15 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Random Scratch Project</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #555;
+    }
+
+    #status span {
+      font-weight: bold;
+    }
+  </style>
   <script>
     // The HTML snippet you want to avoid
     const forbiddenHTML = `<html lang="en-US"><head><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-3FZMRJWZR6"></script>`;
-    
+
     async function openRandomScratchProject() {
+      const status = document.getElementById("status");
+      status.textContent = "Starting search for a valid Scratch project...";
+      
       while (true) {
         // Generate a random project ID
         const randomID = Math.floor(Math.random() * 100000000);
         const url = `https://scratch.mit.edu/projects/${randomID}`;
+
+        // Update status message
+        status.innerHTML = `Checking project <span>${randomID}</span>...`;
 
         // Fetch the project page
         try {
@@ -21,17 +72,21 @@
 
           // Check if the forbidden HTML snippet exists
           if (!html.includes(forbiddenHTML)) {
+            status.innerHTML = `Opening valid project: <a href="${url}" target="_blank">${url}</a>`;
             window.open(url, '_blank');
             break;
           }
         } catch (error) {
           console.error("Error fetching project:", error);
+          status.textContent = "An error occurred. Retrying...";
         }
       }
     }
   </script>
 </head>
 <body>
-  <button onclick="openRandomScratchProject()">Generate Random Scratch Project</button>
+  <h1>Random Scratch Project Generator</h1>
+  <button onclick="openRandomScratchProject()">Find a Scratch Project</button>
+  <div id="status"></div>
 </body>
 </html>
